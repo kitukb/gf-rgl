@@ -10,12 +10,12 @@ lin
   -- : NP -> VP -> Cl
   PredVP = predVP ;
 
-  -- : SC -> VP -> Cl ;         -- that she goes is good (Sayeed p. 94)
+  -- : SC -> VP -> Cl ;         -- that she goes is good (Saeed p. 94)
   --PredSCVP sc vp = ;
 
 --2 Clauses missing object noun phrases
   -- : NP -> VPSlash -> ClSlash ;
-  SlashVP = predVPSlash ;
+  SlashVP = predVP ;
 {-
   -- : ClSlash -> Adv -> ClSlash ;     -- (whom) he sees today
   AdvSlash cls adv = cls ** insertAdv adv cls ;
@@ -27,42 +27,43 @@ lin
 
 -}
   --  : Temp -> Pol -> ClSlash -> SSlash ; -- (that) she had not seen
-  UseSlash t p cls = {s = \\b =>
-    let sent = cls.s ! b ! t.t ! t.a ! p.p in
-    sent ** {beforeSTM = t.s ++ p.s ++ sent.beforeSTM}
+  UseSlash t p cls = {
+    s = \\isSubord =>
+        let cls' : ClSlash = cls ** {
+                    stm = modSTM "waxa" "waxa aan" cls.stm -- Saeed p. 195
+                  } ;
+            cl : Clause = cl2sentence isSubord cls' in
+        t.s ++ p.s ++ cl.s ! t.t ! t.a ! p.p
     } ;
 
 --2 Imperatives
   -- : VP -> Imp ;
- --ImpVP vp = { s = linVP vp } ;
+  ImpVP vp = {s = \\num,pol => linVP (VImp num pol) Statement vp} ;
 
 --2 Embedded sentences
 
-{-
   -- : S  -> SC ;
-  EmbedS s = { } ;
+  EmbedS s = {s = s.s ! True} ; -- choose subordinate
 
   -- : QS -> SC ;
-  EmbedQS qs = { } ;
+  -- EmbedQS qs = { } ;
 
   -- : VP -> SC ;
-  EmbedVP vp = { s = linVP vp } ;
+  EmbedVP vp = {s = infVP vp} ;
 
 --2 Sentences
 
--}
   -- : Temp -> Pol -> Cl -> S ;
-  UseCl t p cl = {s = \\b =>
-    let cltyp = if_then_else ClType b Subord Statement ;
-        sent = cl.s ! cltyp ! t.t ! t.a ! p.p in
-    sent ** {beforeSTM = t.s ++ p.s ++ sent.beforeSTM} ;
+  UseCl t p cls = {
+    s = \\isSubord => let cl = cl2sentence isSubord cls in
+        t.s ++ p.s ++ cl.s ! t.t ! t.a ! p.p
     } ;
 
   -- : Temp -> Pol -> QCl -> QS ;
   UseQCl t p cl = {s = t.s ++ p.s ++ cl.s ! t.t ! t.a ! p.p} ;
 
   -- : Temp -> Pol -> RCl -> RS ;
-  UseRCl t p cl = {s = \\g,c => t.s ++ p.s ++ cl.s ! g ! c ! t.t ! t.a ! p.p} ;
+  UseRCl t p cl = {s = \\st,g,c => t.s ++ p.s ++ cl.s ! g ! c ! t.t ! t.a ! p.p} ;
 
   -- AdvS : Adv -> S  -> S ;            -- then I will go home
   -- ExtAdvS : Adv -> S  -> S ;         -- next week, I will go home
@@ -77,7 +78,8 @@ lin
 
 oper
 
-  advS : Adverb -> S -> S = \a,s -> s ** {s = \\b => let ss = s.s ! b in
-    ss ** {beforeSTM = linAdv a ++ ss.beforeSTM}} ;
+  advS : Adverb -> S -> S = \a,sent -> sent ** {
+    s = \\b => sent.s ! b ++ linAdv a
+    } ;
 
 }

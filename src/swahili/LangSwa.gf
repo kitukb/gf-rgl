@@ -1,10 +1,8 @@
---# -path=.:../abstract:../common:../prelude
+--# -path=.:../abstract:../common:../api
 
 concrete LangSwa of Lang = 
   GrammarSwa,
   LexiconSwa
-  ** {
-
-flags startcat = Phr ; unlexer = text ; lexer = text ;
-
+--  ,ConstructionSwa
+    ** {
 } ;

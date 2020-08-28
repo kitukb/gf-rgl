@@ -11,7 +11,7 @@ lin
 --    ComparAdvAdjS : CAdv -> A -> S  -> Adv ; -- more warmly than he runs
 
   -- : Prep -> NP -> Adv ;
-  PrepNP prep np = prep ** {s = [] ; np = nplite np} ;
+  PrepNP = prepNP ;
 
 -- Adverbs can be modified by 'adadjectives', just like adjectives.
 
@@ -24,8 +24,7 @@ lin
 -- Subordinate clauses can function as adverbs.
 
     -- : Subj -> S -> Adv ;
-  SubjS subj s = let subs = s.s ! True in
-    mkAdv (subs.beforeSTM ++ subj.s ++ subs.stm ++ subs.afterSTM) ;
+  SubjS subj s = mkAdv (s.s ! True) ;
 
 -- Comparison adverbs also work as numeral adverbs.
 

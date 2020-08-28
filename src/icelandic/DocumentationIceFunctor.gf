@@ -6,7 +6,7 @@ incomplete concrete DocumentationIceFunctor of Documentation = CatIce ** open
   ParadigmsIce,
   (G = GrammarIce),
   (S = SyntaxIce),
-  (L = LexiconGer),
+  (L = LexiconIce),
   Prelude,
   HTML
 in {
@@ -25,7 +25,7 @@ oper
 lin
   InflectionN, InflectionN2, InflectionN3 = \noun -> {
     t  = "s" ;
-    s1 = heading1 (heading noun_Category ++ 
+    s1 = heading1 (intag "i" (noun.s ! Sg ! Free ! Nom) ++ ":" ++ heading noun_Category ++ 
                    case noun.g of {
                      Masc   => "("+heading masculine_Parameter+")" ; 
                      Fem    => "("+heading feminine_Parameter+")" ;
@@ -64,7 +64,7 @@ lin
           )) ;
 	  
     in { t  = "a" ;
-         s1 = heading1 (nounHeading adjective_Category).s ;
+         s1 = heading1 (intag "i" (adj.s ! APosit Strong Sg Masc Nom) ++ ":" ++ (nounHeading adjective_Category).s) ;
          s2 =
 	   dtable (heading positive_Parameter ++ heading strong_Parameter) (APosit Strong) ++
 	   dtable (heading positive_Parameter ++ heading weak_Parameter) (APosit Weak) ++
@@ -89,25 +89,25 @@ lin
 
   InflectionV v = {
     t  = "v" ;
-    s1 = heading1 (heading verb_Category) ++  
+    s1 = heading1 (intag "i" (v.s ! VInf Active) ++ ":" ++ heading verb_Category) ++  
          paragraph (verbExample (S.mkCl S.she_NP v)) ;
     s2 = inflVerb v
     } ;
 
   InflectionV2 v = {
     t  = "v" ;
-    s1 = heading1 (heading verb_Category) ++  
+    s1 = heading1 (intag "i" (v.s ! VInf Active) ++ ":" ++ heading verb_Category) ++  
          paragraph (verbExample (S.mkCl S.she_NP v S.i_NP)) ;
     s2 = inflVerb v
     } ;
 
   InflectionV3 v = {
     t  = "v" ;
-    s1 = heading1 (heading verb_Category) ++  
+    s1 = heading1 (intag "i" (v.s ! VInf Active) ++ ":" ++ heading verb_Category) ++  
          paragraph (verbExample (S.mkCl S.she_NP v S.it_NP S.i_NP)) ;
     s2 = inflVerb v
     } ;
-{-
+
   InflectionV2V v = {
     t  = "v" ;
     s1 = heading1 (heading verb_Category) ++
@@ -157,7 +157,6 @@ lin
     s1 = heading1 (heading verb_Category) ;
     s2 = inflVerb v
     } ;
--}
 
 lin
   NoDefinition   t     = {s=t.s};
@@ -194,7 +193,7 @@ oper
           tr (                                                th "2"  ++ gforms voice Pl P2) ++
           tr (                                                th "3"  ++ gforms voice Pl P3) ++
 	  tr (intagAttr "th" "colspan=2" (heading infinitive_Parameter) ++ intagAttr "td" "colspan=4" (vfin (VInf voice))) ++
-	  tr (intagAttr "th" "colspan=2" (heading supine_Parameter)     ++ intagAttr "td" "colspan=4" (verb.sup ! voice))
+	  tr (intagAttr "th" "colspan=2" (heading supine_Parameter)     ++ intagAttr "td" "colspan=4" (vfin (VSup voice)))
           ) ;
      in
      heading2 (heading active_Parameter) ++ voiceTable Active ++

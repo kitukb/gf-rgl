@@ -59,7 +59,7 @@ oper pronYaTu : { s : Case => Str } -> Str -> Person -> Gender -> Pronoun =
         <Gen,      GPl> => mo + "их" ;
         <Dat,      GPl> => mo + "им" ;
         <Acc,      GPl> => mo + "их" ;
-        <Inst,     GPl> => mo + "им" ;
+        <Inst,     GPl> => mo + "ими" ;
         <Prepos _, GPl> => mo + "их" 
 	
       }
@@ -1057,7 +1057,7 @@ oper ti_j_EndDecl : Str -> Adjective = \s ->{s = table {
 ---- (according to the number and the person of the subject)
 ---- patterns in the present tense in the indicative mood.
 
--- +++ MG_UR: new conjugation class 'Foreign' introduced +++
+-- Foreign coincides with First. Deprecated. SecondA not needed, also deprecated.
 param Conjugation = First | FirstE | Second | SecondA | Mixed | Dolzhen | Foreign ;
 
   oper hasConj : Verbum -> Conjugation = \ v ->
@@ -1141,13 +1141,13 @@ oper verbKhotet : Verbum = verbDecl Imperfective Mixed "хо" "у" "хотел" 
 --AR oper verbKhotet : Verbum = verbDecl Imperfective Mixed "хоч" "у" "хотел" "хоти" "хотеть";
 
 -- Irregular
-oper verbDolzhen : Verbum = verbDecl Imperfective Dolzhen "долж" "ен" "долж" ["будь должен"] ["быть должным"] ;
+oper verbDolzhen : Verbum = verbDecl Imperfective Dolzhen "долж" "ен" "долж" ("будь" ++ "должен") ("быть" ++ "должным") ;
 
 
 -- further conjugation class added by Magda Gerritsen and Ulrich Real:
 -- foreign words introduced in Russian
 
-oper verbOrganisuet : Verbum = verbDecl Imperfective Foreign "организу" "ю" "организовал" "организуй" "организовать";
+oper verbOrganisuet : Verbum = verbDecl Imperfective First "организу" "ю" "организовал" "организуй" "организовать";
 
 
 oper idetDozhd: Verbum -> Verbum = \idet -> {s = \\vf=>idet.s!vf ++ "дождь"; asp = Imperfective};
@@ -1159,10 +1159,10 @@ oper PresentVerb : Type = PresentVF => Str ;
 
 oper presentConjDolzhen: Str -> Str -> PresentVerb = \del, sgP1End ->
   table {
-    PRF GPl _        => del + "ны" ;
     PRF (GSg Masc) _ => del + sgP1End ;
     PRF (GSg Fem)  _ => del + "на" ;
-    PRF (GSg Neut) _ => del + "но"
+    PRF (GSg Neut) _ => del + "но" ;
+    PRF GPl _        => del + "ны"
   };
 
 -- +++ MG_UR: changed! +++
@@ -1176,19 +1176,8 @@ oper presentConjMixed: Str -> Str -> PresentVerb = \del, sgP1End ->
     PRF GPl P2  => del+ "тите" ;
     PRF GPl P3  => del+ "тят"
   };
-  
--- +++ MG_UR: changed! (+ д) +++ 
-oper presentConj2: Str -> Str -> PresentVerb = \del, sgP1End ->
-table {
-    PRF (GSg _) P1 => del+ sgP1End ; -- sgP1End "жу"
-    PRF (GSg _) P2 => del+ "дишь" ;
-    PRF (GSg _) P3  => del+ "дит" ;
-    PRF GPl P1 => del+ "дим" ;
-    PRF GPl P2 => del+ "дите" ;
-    PRF GPl P3 => del+ "дят"
-  };
 
-oper presentConj2a: Str -> Str -> PresentVerb = \del, sgP1End ->
+oper presentConj2: Str -> Str -> PresentVerb = \del, sgP1End ->
 table {
     PRF (GSg _) P1 => del+ sgP1End ; -- sgP1End "жу"
     PRF (GSg _) P2 => del+ "ишь" ;
@@ -1228,6 +1217,14 @@ oper presentConj1Moch: Str -> Str -> Str -> PresentVerb = \del, sgP1End, altRoot
     PRF GPl P3 => del+ sgP1End + "т"
   };
 
+oper pastConjMoch: Str -> PastVerb = \del ->
+  table {
+    PSF  (GSg Masc) => del ;
+    PSF  (GSg Fem)  => del +"ла" ;
+    PSF  (GSg Neut)  => del+"ло" ;
+    PSF  GPl => del+ "ли"
+  };
+
 -- "PastVerb" takes care of the past tense conjugation.
 
 param PastVF = PSF GenNum ;
@@ -1242,22 +1239,11 @@ oper pastConj: Str -> PastVerb = \del ->
 
 oper pastConjDolzhen: Str -> PastVerb = \del ->
   table {
-    PSF  (GSg Masc) => ["был "] + del + "ен" ;
-    PSF  (GSg Fem)  => ["была "] + del + "на" ;
-    PSF  (GSg Neut)  => ["было "] + del + "но" ;
-    PSF  GPl => ["были "] + del + "ны"
+    PSF  (GSg Masc)  => "был"  ++ del + "ен" ;
+    PSF  (GSg Fem)   => "была" ++ del + "на" ;
+    PSF  (GSg Neut)  => "было" ++ del + "но" ;
+    PSF  GPl         => "были" ++ del + "ны"
   };
-
--- further class added by Magda Gerritsen and Ulrich Real
-oper presentConjForeign: Str -> Str -> PresentVerb = \del, sgP1End ->
-  table {
-  PRF (GSg _) P1 => del+ sgP1End ; -- sgP1End "ю"
-  PRF (GSg _) P2 => del+ "ешь" ;
-  PRF (GSg _) P3 => del+ "ет" ;
-  PRF GPl P1 => del+ "ем" ;
-  PRF GPl P2  => del+ "ете" ;
-  PRF GPl P3  => del+ "ют"
-};
 
 -- "verbDecl" sorts out verbs according to the aspect and voice parameters.
 -- It produces the full conjugation table for a verb entry
@@ -1269,12 +1255,12 @@ oper verbDecl: Aspect -> Conjugation -> Str -> Str -> Str -> Str -> Str -> Verbu
 	                   First   => <presentConj1,pastConj> ;
 			   FirstE  => <presentConj1E,pastConj> ;
 			   Second  => <presentConj2,pastConj> ;
-			   SecondA => <presentConj2a,pastConj> ;
+			   SecondA => <presentConj2,pastConj> ;
 			   Mixed   => <presentConjMixed,pastConj> ;
 			   Dolzhen => <presentConjDolzhen,pastConjDolzhen> ;
-			   Foreign => <presentConjForeign,pastConj> } in 
+			   Foreign => <presentConj1,pastConj> } in
        let patt = case a of {
-	            Perfective   => mkVerbImperfective;
+	            Perfective   => mkVerbPerfective;
 		    Imperfective => mkVerbImperfective } in
        patt inf imperSgP2 (conj.p1 del sgP1End) (conj.p2 sgMascPast) ;
 
@@ -1283,14 +1269,14 @@ oper verbDecl: Aspect -> Conjugation -> Str -> Str -> Str -> Str -> Str -> Verbu
 oper verbDeclMoch: Aspect -> Conjugation -> Str -> Str -> Str -> Str ->Str -> Str -> Verbum =
    \a, c, del, sgP1End, sgMascPast, imperSgP2, inf, altRoot -> 
        let patt = case a of {
-	            Perfective   => mkVerbImperfective;
+	            Perfective   => mkVerbPerfective;
 		    Imperfective => mkVerbImperfective } in
-        patt inf imperSgP2 (presentConj1Moch del sgP1End altRoot) (pastConj sgMascPast);
+        patt inf imperSgP2 (presentConj1Moch del sgP1End altRoot) (pastConjMoch sgMascPast);
 
 oper add_sya : Voice -> Str -> Str = \v,x ->
        case v of {
 	 Act => x ;
-	 Pas => case Predef.dp 2 x of {
+	 Pas => case Predef.dp 1 x of {
                   "а" | "е" | "ё" | "и" | "о" | "у" | "ы" | "э" | "ю" | "я" => x + "сь" ;
 		  _ => x + "ся"
 	   }
@@ -1313,7 +1299,7 @@ oper mkVerbImperfective : Str -> Str -> PresentVerb -> PastVerb -> Verbum =
 
 	 VSUB gn => add_sya vox (past ! (PSF gn)) ++ "бы";
 
-	 VIND (GSg _) (VPresent p) => add_sya vox (presentFuture ! (PRF (GSg Masc) p));
+	 VIND (GSg g) (VPresent p) => add_sya vox (presentFuture ! (PRF (GSg g) p));
 	 VIND GPl (VPresent p)     => add_sya vox (presentFuture ! (PRF GPl p));
 	 VIND (GSg _) (VFuture P1) => "буду"   ++ add_sya vox inf ;
 	 VIND (GSg _) (VFuture P2) => "будешь" ++ add_sya vox  inf ;
@@ -1339,10 +1325,8 @@ oper mkVerbPerfective: Str -> Str -> PresentVerb -> PastVerb -> Verbum =
 
 	 VSUB gn => add_sya vox (past ! (PSF gn)) ++ "бы" ;
 
-	 VIND (GSg _) (VPresent _)  => nonExist ;
-	 VIND GPl     (VPresent P1) => nonExist ;
-	 VIND GPl     (VPresent P2) => nonExist ;
-	 VIND GPl     (VPresent P3) => nonExist ;
+	 VIND (GSg g) (VPresent p)  => (presentFuture ! (PRF (GSg g) p)); -- these are not correct,
+	 VIND GPl     (VPresent p)  => (presentFuture ! (PRF GPl p)) ;       -- but used elsewhere
 	 VIND gn      (VFuture p)   => add_sya vox (presentFuture ! (PRF gn p)) ;
 	 VIND gn      VPast         => add_sya vox (past ! (PSF gn))
      } } ;

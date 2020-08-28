@@ -9,6 +9,8 @@ oper
   vstar : pattern Str = #("a" | "e" | "i" | "o" | "u" | "y" | "w") ; -- semivowels included
   vv : pattern Str = #("aa" | "ee" | "ii" | "oo" | "uu") ;
   c : pattern Str = #("m"|"n"|"p"|"b"|"t"|"d"|"k"|"g"|"f"|"v"
+                      |"s"|"h"|"l"|"j"|"r"|"z"|"c"|"q");
+  cstar : pattern Str = #("m"|"n"|"p"|"b"|"t"|"d"|"k"|"g"|"f"|"v" -- semivowels included
                       |"s"|"h"|"l"|"j"|"r"|"z"|"c"|"q"|"y"|"w");
   lmnr : pattern Str = #("l" | "m" | "n" | "r") ;
   kpt : pattern Str = #("k" | "p" | "t") ;
@@ -52,7 +54,7 @@ oper
     } where {
         allomF : Str -> DefTA = \wiilka ->
           case wiilka of {
-                _ + "ta" => DA ; _ + "sha" => SHA ;
+                _ + "ta" => TA ; _ + "sha" => SHA ;
                 _ + "da" => DA ; _ + "dha" => DHA } ;
         allomM : Str -> DefKA = \wiilka ->
           case wiilka of {
@@ -154,7 +156,7 @@ oper
                 _  => Sg3 g } ;
 
   getNum : Agreement -> Number = \a ->
-    case a of { Sg1|Sg2|Sg3 _ => Sg ; _ => Pl } ;
+    case a of { Sg1|Sg2|Sg3 _|Impers => Sg ; _ => Pl } ;
 
   plAgr : Agreement -> Agreement = \agr ->
     case agr of { Sg1   => Pl1 Excl ;
@@ -175,7 +177,7 @@ oper
     Sg2_Prep => Sg2 ;
     Pl1_Prep i => Pl1 i ;
     Pl2_Prep   => Pl2 ;
-    _          => Pl3
+    _          => Sg3 Masc
   } ;
 
   isP3 = overload {
@@ -188,8 +190,17 @@ oper
 
   gender : {gda : GenderDefArt} -> Gender = \n ->
     case n.gda of {FM _ _ => Fem ; _ => Masc} ;
-  npgender : {a : Agreement} -> Gender = \n ->
-    case n.a of {Sg3 Fem => Fem ; _ => Masc} ;
+
+  gennum : {gda : GenderDefArt} -> Number -> GenNum = \gda,n ->
+    case n of {Pl => PlInv ; Sg =>
+      case gda.gda of {FM _ _ => SgFem ; _ => SgMasc}
+    } ;
+
+  npgennum : {a : Agreement} -> GenNum = \n ->
+    case n.a of {
+      Sg2|Sg3 Fem  => SgFem ;
+      Sg1|Sg3 Masc => SgMasc ;
+      _ => PlInv } ;
 
 --------------------------------------------------------------------------------
 -- Numerals
@@ -199,11 +210,28 @@ param
 
   CardOrd = NOrd | NCard ;
 
+  -- to know whether to put oo in between numeral and CN
+  NumType = NoNum | Basic | Compound ;
+
+oper
+  isNum : NumType -> Bool = \nt -> case nt of {
+    NoNum => False ;
+    _     => True
+    } ;
 --------------------------------------------------------------------------------
 -- Adjectives
 
 param
   AForm = AF Number Case ; ---- TODO: past tense
+
+  ModType = NoMod | AMod | OtherMod ;
+
+oper
+  -- to flip ModType
+  notMod : ModType -> ModType = \mt -> case mt of {
+    NoMod => OtherMod ;
+    _ => NoMod
+  } ;
 
 --------------------------------------------------------------------------------
 -- Prepositions
@@ -212,7 +240,7 @@ param
   Preposition = U | Ku | Ka | La | NoPrep ;
 
   PrepCombination = Ugu | Uga | Ula | Kaga | Kula | Kala
-                  | Passive | Lagu | Laga | Loo | Lala -- TODO all combinations with impersonal la
+                  | Passive | Loo | Lagu | Laga | Lala -- TODO all combinations with impersonal la: Loogu, Looga, Loola, Lagaga, Lagula, Lagala
                   | Single Preposition ;
 
 oper
@@ -233,6 +261,15 @@ oper
           Single _ => oneWay ! p1 ! p2 ;
           z        => z } ;
 
+  combinePassive : Preposition -> PrepCombination = \p ->
+    case p of {
+      U => Loo ;
+      Ku => Lagu ;
+      Ka => Laga ;
+      La => Lala ;
+      _ => Passive
+    } ;
+
   isPassive : {c2 : PrepCombination} -> Bool = \vp ->
     case vp.c2 of {
       Passive | Lagu | Laga | Loo | Lala => True ;
@@ -242,7 +279,7 @@ oper
 --------------------------------------------------------------------------------
 -- Verbs
 
--- Sayeed p. 84-85
+-- Saeed p. 84-85
 -- Tense: Past/Present/Future
 -- Aspect: Simple/Progressive/Habitual
 -- Mood: Declarative/Imperative/Conditional/Optative/Potential
@@ -271,9 +308,14 @@ param
     | VPres Aspect VAgr Polarity
     | VNegPast Aspect
     | VPast Aspect VAgr
---    | VRelShort  -- "som är/har/…" TODO is this used in other verbs?
-    | VRel Gender -- Reduced present general in relative clauses
-    | VImp Number Polarity ;
+    | VImp Number Polarity
+    | VRel GenNum {- Saeed p. 95-96 + ch 8
+                     Reduced present general in relative clauses;  as absolutive
+                      1/2SG/3SG M/2PL/3PL suga (VRel MascSg)
+                      3 SG F sugta (VRel FemSg)
+                      1PL sugna (VRel PlInv) -}
+    | VRelNeg     -- Saeed p. 211 have: lahayn, be: ahayni
+    | VNegCond GenNum ;
 
   VAgr =
       Sg1_Sg3Masc
@@ -283,6 +325,10 @@ param
     | Pl3_ ;
 
   PredType = NoPred | Copula | NoCopula ;
+
+  STM = Waa PredType | Waxa ;
+
+  VVForm = Infinitive | Subjunctive | Waa_In ;
 
 oper
   if_then_Pol : Polarity -> Str -> Str -> Str = \p,t,f ->
@@ -300,11 +346,22 @@ oper
     Pl1 _ => Pl1_ ; Pl2 => Pl2_ ; Pl3 => Pl3_
   } ;
 
+  isNeg : VForm -> Bool = \vf -> case vf of {
+    VNegPast _ => True ;
+    VNegCond _ => True ;
+    VRelNeg    => True ;
+    VImp _ Neg => True ;
+    VPres _ _ Neg => True ;
+    _ => False
+    } ;
+
+  showSTM : STM -> Str = \stm -> case stm of {
+    Waxa  => "waxa" ; Waa _ => "waa" } ;
 --------------------------------------------------------------------------------
 -- Clauses
 
 param
 
-  ClType = Statement | Question | Subord ;
+  ClType = Statement | PolarQuestion | WhQuestion | Subord ;
 
 }

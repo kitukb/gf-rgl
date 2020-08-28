@@ -21,7 +21,7 @@ lin
   bank_N = mkN "банк" ;
   bark_N = mkN "кора";
   beautiful_A = mkA "красивый";
-  become_VA = regV perfective second "станов" "лю" "стал" "стань" "стать" ;
+  become_VA = regV perfective secondA "станов" "лю" "стал" "стань" "стать" ;
   beer_N = mkIndeclinableNoun "пиво" neuter inanimate ;
   beg_V2V = dirV2 (mkV imperfective "прошу" "просишь" "просит" "просим" "просите" "просят" "просил" "проси" "просить" );
   belly_N = mkN "живот" ;
@@ -113,7 +113,7 @@ lin
   floor_N = mkN "пол" ;
   flow_V = regV imperfective firstE "тек" "у" "тёк" "теки" "течь" ;
   flower_N = mkN "цветок";
-  fly_V = regV imperfective second "лета" "ю" "летал" "летай" "летать" ;
+  fly_V = regV imperfective first "лета" "ю" "летал" "летай" "летать" ;
   fog_N = mkN "туман" ;
   foot_N = mkN "ступня" ;
   forest_N = mkN "лес" ; -- prepos -u
@@ -128,7 +128,7 @@ lin
   girl_N = mkN "девочка" animate; -- vowel change
   give_V3 = tvDirDir (regV imperfective firstE "да" "ю" "давал" "давай" "давать" ) ;
   glove_N = mkN "перчатка" ; -- vowel change
-  go_V= regV imperfective second "хо" "жу" "ходил" "ходи" "ходить" ;
+  go_V = mkV imperfective "хожу" "ходишь" "ходит" "ходим" "ходите" "ходят" "ходил" "ходи" "ходить" ;
   gold_N = mkN "золото" ;
   good_A = mkA "хороший" "лучше" ; 
   grammar_N = mkN "грамматика";
@@ -139,7 +139,7 @@ lin
   hand_N = mkN "рука" ;
   harbour_N = mkN "порт" ; -- prepos -u
   hat_N = mkN "шляпа" ;
-  hate_V2= dirV2 (regV imperfective second "ненави" "жу" "ненавидел" "ненавидь" "ненавидеть" );
+  hate_V2= dirV2 (mkV imperfective "ненавижу" "ненавидишь" "ненавидит" "ненавидим" "ненавидите" "ненавидят" "ненавидел" "ненавидь" "ненавидеть" );
   head_N = mkN "голова" ;
   hear_V2= dirV2 (regV imperfective first "слуша" "ю" "слушал" "слушай" "слушать" );
   heart_N = mkN "сердце" "сердца" "сердцу" "сердца" "сердцем" "сердце" "сердце" "сердца" "сердец" "сердцам" "сердец" "сердцами" "сердцах"  neuter inanimate ;
@@ -173,7 +173,7 @@ lin
   leaf_N = mkN "лист" ; -- irregular pl
   learn_V2= dirV2 (regV imperfective second "уч" "у" "учил" "учи" "учить" );
   leather_N = mkN "кожа" ;
-  leave_V2= dirV2 (regV imperfective second "ухож" "у" "уходил" "уходи" "уходить" );
+  leave_V2= dirV2 (mkV imperfective "ухожу" "уходишь" "уходит" "уходим" "уходите" "уходят" "уходил" "уходи" "уходить" );
   left_Ord = (uy_j_EndDecl "лев" ) ** {lock_A = <>}; 
   leg_N = mkN "нога" ;
   lie_V = regV imperfective firstE "лг" "у" "лгал" "лги" "лгать" ;
@@ -208,7 +208,7 @@ lin
   oil_N = mkN "нефть" ;
   old_A = mkA "старый" "старше" ;
   open_V2= dirV2 (regV imperfective first "открыва" "ю" "открывал" "открывай" "открывать" );
----  organise_V2 = dirV2 (regV imperfective foreign "организу" "ю" "организовал" "организуй" "организовать" ); -- +++ MG_UR: added +++
+---  organise_V2 = dirV2 (regV imperfective first "организу" "ю" "организовал" "организуй" "организовать" );
   paint_V2A = dirV2 (regV imperfective first "рису" "ю" "рисовал" "рисуй" "рисовать" ) ;
 ---  palace_N = nDvorec "двор" ; -- +++ MG_UR: added +++
   paper_N = mkN "бумага" ;
@@ -257,7 +257,7 @@ lin
   science_N = mkN "наука" ;
   scratch_V2 = dirV2 (regV imperfective first "чеш" "у" "чесал" "чеши" "чесать" ) ; 
   sea_N = mkN "море" ;
-  see_V2 = dirV2 (regV imperfective second "ви" "жу" "видел" "видь" "видеть" );
+  see_V2 = dirV2 (mkV imperfective "вижу" "видишь" "видит" "видим" "видите" "видят" "видел" "видь" "видеть");
   seed_N = mkN "семя";
   seek_V2 = dirV2 (regV imperfective first "ищ" "у" "искал" "ищи" "искать" );
   sell_V3 = tvDirDir (regV imperfective firstE "прода" "ю" "продавал" "продавай" "продавать" );

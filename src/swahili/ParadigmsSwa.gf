@@ -1,171 +1,114 @@
 --# -path=.:../abstract:../../prelude:../common
 
---1 Swahili Lexical Paradigms
-
-
-resource ParadigmsSwa = open(Predef=Predef), Prelude, MorphoSwa,ResSwa,CatSwa in {
-
-flags optimize=all ;
-
---2 Parameters 
---
--- To abstract over gender names, we define the following identifiers.
+instance ParadigmsSwa of ParadigmsBantu = DiffSwa, CommonBantu ** open  (Predef=Predef),Prelude,MorphoSwa, CatSwa in {
 
 oper
-  Animacy : Type ; 
+  --Cgender : Type ; 
+  a_wa   : Cgender ; --m-wa
+  u_i    : Cgender ; --m-mi
+  li_ya  : Cgender ; --ji-ma
+  ki_vi  : Cgender ; --kivi
+  i_zi   : Cgender ; -- nn
+  u_zi   : Cgender ; --uu
+  u_u    : Cgender ; --uu
+  u_ya   : Cgender;
+  ya_ya  : Cgender;
+  i_i    : Cgender;
+  ku_ku  : Cgender ; --uu
+  pa_pa  : Cgender ; --uu
+  mu_mu  : Cgender ; --uu
 
-  animate   : Animacy ;
-  inanimate : Animacy ;
-
--- To abstract over number names, we define the following.
-
-  Number : Type ; 
-
-  singular : Number ;
-  plural   : Number ;
-
--- To abstract over case names, we define the following.
-
-  Case : Type ;
-
-  nominative : Case ;
-  locative   : Case ;
-
--- To abstract over nounclass names, we define the following.
   
-  Gender : Type ;
+  Cgender =  MorphoSwa.Cgender ; 
+  Number =  MorphoSwa.Number ;
+  Case   =  MorphoSwa.NPCase ;
+   a_wa  = G1 ;--%
+   u_i   = G2 ;
+  li_ya  = G3 ;
+  ki_vi  = G4 ;
+  i_zi   = G5 ;
+  u_zi   = G6 ;
+  u_u    = G7 ;
+  u_ya   = G8 ;
+  ya_ya  = G9 ;
+  i_i    =G10 ;
+  ku_ku  = G11;
+  pa_pa  =G12 ;
+  mu_mu  =G13;
+  
+  nominative = npNom ;
+  locative = npLoc ;
 
-   m_wa :Gender ;
-   m_mi : Gender ;
-   ji_ma : Gender ;
-   e_ma : Gender ;
-   ma_ma : Gender ;
-   ki_vi : Gender ;
-   e_e : Gender ;
-   u_u : Gender ;
-   u_ma : Gender ;
-   u_e : Gender ;
+  --npNumber np = (nounAgr np.a).n ;
+
+
+  regN = MorphoSwa.regN ; 
+  iregN = MorphoSwa.iregN ;
+
+  
+  mkPrepof : Number => Cgender => Str = 
+    table Number { Sg => table { G1 |G2|G6|G7 |G8 => "wa" ; 
+                                 G3=> "la" ; 
+                                 G4 => "cha" ; 
+                                 G5 => "ya" ; 
+                                 G11 => "pa";
+                                 G12 => "kwa";
+                                 G13 => "mwa";
+                                  _ => ""} ; 
+                                 
+                   Pl => table { G1 => "wa" ; 
+                                 G2|G3 |G8 |G9 |G10 => "ya" ; 
+                                 G4 => "vya" ; 
+                                 G5|G6 => "za" ; 
+                                 _ => ""} } ;
+  
+                       
+ 
+
+
+
+ eqNumber : Number -> Number -> Bool =  
+     \n,m -> case n of { Sg => case m of { Sg => True ; _ => False } ;
+                         Pl => case m of { Pl => True ; _ => False } } ;
+
+    verb2snoun : Verb ->  Cgender -> Noun = \v,g->    
+    let wp = "mu" + init(v.s ! VGen) +"ji" ;
+        wpl = "wa" + init(v.s ! VGen) +"ji" in 
+    iregN wp wpl g ;
+ 
 
  
 
---2 Nouns
+ mkAV  v  = v ** { lock_AV = <>} ;
+      mkAV  : A ->  AV ;
+      AS, AV : Type = A ;
 
--- Worst case: give all four forms and the semantic gender.
-
-  mkN  : (mtu,watu : Str) -> Gender -> Animacy -> N ;
-
--- The regular function captures the variants for nouns depending on Gender and Number
-
-  regN : Str -> Gender -> Animacy -> N ;
-
--- In practice the worst case is just: give singular and plural nominative.
-
-
-  mk2N : (mtu , watu : Str) -> Gender -> Animacy -> N ;
-  mk2N x y g anim = mkNounIrreg x y g anim ** {lock_N = <>};
-
-  mkN2 : N -> Prep -> N2 ;
-  mkN2  : N -> Prep -> N2 = \n,p -> n ** {c2 = p.s ; lock_N2 = <>} ;
-
-  mkPrep : Str -> Prep ;
---  mkPrep p = {s = p ; c = CPrep PNul ; isDir = False ; lock_Prep = <>} ;
-  mkPrep p = {s = p ; lock_Prep = <>} ;
+      mkAS  : A -> AS ; 
+      mkAS  v = v ** {lock_AS = <>} ;
+  
+  
+  iregA, regA : Str -> A = \s -> lin A (MorphoSwa.regA s) ;
+   cregA : Str -> A = \s -> lin A (MorphoSwa.cregA s) ;
+   --iregA : (fat,fatter : Str) -> A =\a,b -> lin A (MorphoSwa.iregA a b);
+  mkA = overload {
+    mkA : Str -> A = \a -> lin A (regA a |cregA a | iregA a);
+   -- mkA : (fat,fatter : Str) -> A =\a,b -> lin A (iregA a b);
+    } ;
 
 
---3 Relational nouns 
--- 
--- Relational nouns ("fille de x") need a case and a preposition. 
+  
+  regV=MorphoSwa.regV ;
 
--- All nouns created by the previous functions are marked as
--- $nonhuman$. If you want a $human$ noun, wrap it with the following
--- function:
-
---  genderN : Gender -> N -> N ; 
-
--- For regular adjectives, the adverbial form is derived. This holds
--- even for cases with the variation "happy - happily".
-
-   regA : Str -> A ;
-
--- If comparison is formed by "kuliko", as usual in Swahili,
--- the following pattern is used:
-
- compADeg : A -> A ;
-
---2 Definitions of paradigms
---
--- The definitions should not bother the user of the API. So they are
--- hidden from the document.
---.
-
-  Animacy = ResSwa.Animacy ; 
-  Number = ResSwa.Number ;
-  Case = ResSwa.Case ;
-  Gender = ResSwa.Gender ;
-  animate = AN ; 
-  inanimate = IN ;
-  singular = Sg ;
-  plural = Pl ;
-  nominative = Nom ;
-  locative = Loc ;
-  m_wa = g1_2 ;
-  m_mi = g3_4 ;
-  ji_ma = g5_6 ;
-  e_ma = g5a_6 ;
-  ma_ma = g6 ; 
-  ki_vi = g7_8 ;
-  e_e = g9_10 ; 
-  u_u = g11 ; 
-  u_ma = g11_6 ; 
-  u_e = g11_10 ;
-  VForm = ResSwa.VForm ;
-
---  regN x g anim = mkNomReg x g anim ** {lock_N = <>} ;
-
-    regN = \x,g,anim ->
-      mkNomReg x g anim ** {lock_N = <>} ;
-
---  mkN x y g anim = mkNounIrreg x y g anim ** {lock_N = <>} ;
-  mkN = \x,y,g,anim -> 
-    mkNounIrreg x y g anim ** {lock_N = <>} ;
  
--- Adjectives
-
-   regA a = compADeg { 
-         s = \\_ => (mkAdjective a).s ;
-         lock_A = <>} ;
-
-  compADeg a = 
-    {
-       s = table {
-          Posit => a.s ! Posit ;
-           _ => \\f => a.s ! Posit ! f ++ "kuliko" 
-       } ; 
-     lock_A = <>} ;
- 
--- Verbs
-    regV : Str -> V ;
-    regV = \enda -> mkV enda ** {s1 = [] ; lock_V = <>} ;
-
-{--
-	mkV2 = overload {
-	    mkV2 : Str -> V2 = \s -> dirV2 (regV s) ;
-	    mkV2 : V -> V2 = dirV2 ;  
-	    mkV2 : V -> Prep -> V2 = mmkV2
-	  } ;
-
-   mmkV2 : V -> Prep -> V2 ;
-   mmkV2 v p = v ** {c2 = p ; lock_V2 = <>} ;
-   dirV2 : V -> V2 = \v -> mmkV2 v "na" ;
---}
-
---2 Adverbs
-
--- Adverbs are not inflected. Most lexical ones have position
--- after the verb. 
-
-  mkAdv : Str -> Adv ;
-  mkAdv x = ss x ** {lock_Adv = <>} ;
+mkV = overload {
+    mkV : (cry : Str) -> V=\v-> lin V (regV v ) ; -- regular, incl. cry-cries, Swas-Swases etc
+    --mkV : Str -> V -> V=\v -> lin V (regV v ) ;  -- fix compound, e.g. under+take
+  }; 
+mkV2 = overload {
+        mkV2  : Str -> V2 = \s -> dirV2 (regV s) ;   
+        mkV2  : V -> V2 = dirV2 ;
+        mkV2  : V -> Prep -> V2 = prepV2  ;
+  };
 
 
-} ;
+} 
