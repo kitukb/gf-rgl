@@ -124,7 +124,7 @@ concrete StructuralKam of Structural = CatKam **
                    } 
                
            }
-    in { s= questo; isFused= False} ;
+    in { s= questo; s1=[];isFused= False} ;
   quite_Adv = mkAdV "o muno" ;
   she_Pron  = mkPron "we" "ake" G1 Sg P3 ;
            
@@ -217,7 +217,7 @@ concrete StructuralKam of Structural = CatKam **
   with_Prep =let
        questo : Number =>  MorphoKam.Cgender =>  Str =
         \\n,g =>  DiffKam.Withprefix n g + "na"    
-        in { s = questo ; isFused=False} ;
+        in { s = questo ; s1=[]; isFused=False} ;
  yes_Phr = ss "ii" ;
   yes_Utt = ss "ii" ;
    youSg_Pron  =  mkPron "we" "aku" G1 Sg P2 ;

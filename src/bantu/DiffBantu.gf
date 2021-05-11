@@ -4,7 +4,7 @@ interface DiffBantu = open CommonBantu, Prelude in {
   flags coding=utf8 ;
 
 param 
-   Agr =  Ag  Cgender Number Person ;
+  Agr =   AgP1  Number | AgP2  Number  | AgP3  Cgender Number  ; 
   PronForm= Pers | Poss Number  Cgender;
   DetForm = Sub | Obj  Cgender ;
   IMPForm = Com | Pol ;
@@ -20,35 +20,56 @@ oper
    Cgender : PType ;
   firstGender :  Cgender ; -- G1
   secondGender :  Cgender ; -- G2
-  Noun : Type  = {s : Number => Case => Str ; g :  Cgender};
-  CNoun : Type = {s : Number => Case => Str ; g :  Cgender; s2 : Number => Str};
+  Noun : Type  = {s : Number  => Str ; g :  Cgender};
+  CNoun : Type = {s,s2 : Number =>  Str ; g :  Cgender};
   AAgr : Type  = {g :  Cgender ; n : Number} ;
  
 
 oper
    clitAgr : Agr -> {n : Number ; p : Person} = \a -> case a of {
-    Ag _ n p => {n = n; p = p} 
+    AgP3 _ n  => {n = n; p = P3} ;
+     AgP2 n  => {n = n; p = P2} ;
+    AgP1  n  => {n = n; p = P1} 
     } ;
   complAgr : Agr -> {g :  Cgender ; n : Number} = \a -> case a of {
-    Ag g n _ => {g = g ; n = n} 
-    } ;
+    AgP3 g n  => {g = g; n = n} ;
+     AgP2 n  => {g = G1; n = n} ;
+    AgP1  n  => {g = G1; n = n} 
+        } ;
   predetAgr : Agr -> {g :  Cgender} = \a -> case a of {
-    Ag g _ _ => {g = g} 
+    AgP3 g  _ => {g = g} ;
+     AgP2  _  => {g = G1} ;
+    AgP1  _  => {g = G1} 
     } ;
   nounAgr : Agr -> {g :  Cgender ; n : Number ; p : Person} = \a -> case a of {
-    Ag g n p => {g = g ; n = n  ; p = p} 
+  AgP3 g n  => {g = g;n = n; p = P3} ;
+  AgP2 n => {g = G1;n = n; p = P2} ;
+  AgP1  n => {g = G1;n = n; p = P1} 
+    
     } ; 
 
   detAgr : Agr -> {g :  Cgender ; p : Person} = \a -> case a of {
-    Ag g _ p => {g = g; p = p} 
+  AgP3 g _  => {g = g; p = P3} ;
+  AgP2 _  => {g = G1; p = P2} ;
+  AgP1  _  => {g = G1; p = P1} 
+ 
     } ;
 
-  agrG1 : Number -> Person -> Agr = \n,p ->
-    Ag firstGender n p ;
-  dapagr :  Cgender -> Person -> Agr = \g,p ->
-    Ag g Sg p ;
+toAgr : Cgender -> Number -> Person -> Agr = \g, n, p ->
+    case p of {
+      P1 => AgP1  n  ;
+      P2 => AgP2  n  ;
+      P3 => AgP3 g n 
+    } ;
+
+  agrG1 : Number -> Person -> Agr = \n,p -> 
+    AgP1  n ;
+  dapagr :  Cgender -> Person -> Agr = \g,p -> case p of {
+    P3  =>  AgP3 g Sg ;
+    P2  =>  AgP2 Sg ;
+    P1  =>  AgP1 Sg } ;
   agrP3 :  Cgender -> Number -> Agr = \g,n ->
-    Ag g n P3 ;
+    AgP3 g n  ;
 
   aagr :  Cgender -> Number -> AAgr = \g,n ->
     {g = g ; n = n} ;
@@ -58,9 +79,11 @@ oper
   conjAgr : Number -> Agr -> Agr -> Agr = \n,xa,ya -> 
     let 
       x = nounAgr xa ; y = nounAgr ya
-    in 
-    Ag (conjGender x.g y.g) (conjNumber (conjNumber x.n y.n) n) 
+    in toAgr
+     (conjGender x.g y.g) (conjNumber (conjNumber x.n y.n) n) 
        (conjPPerson x.p y.p) ;
+
+      
 
   conjGender :  Cgender ->  Cgender ->  Cgender ;
 

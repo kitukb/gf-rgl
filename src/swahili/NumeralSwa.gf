@@ -37,7 +37,7 @@ lin pot2plus d e = {s = table {
                    n = Pl} ;
  lin pot2as3 n = n ;
 lin pot3 n = { s = table {
-      NCard => \\g => mkCard NCard "elfu"!g  ++ n.s ! NCard ! g ;
+      NCard => \\g =>  mkCard NCard "elfu"!g  ++ n.s ! NCard ! g ;
       NOrd => \\g =>Ordprefix g++ mkCard NCard "elfu" ! g ++ n.s ! NCard ! g } ;
               n = Pl} ;
 lin pot3plus n m = { s = table {
@@ -47,9 +47,8 @@ lin pot3plus n m = { s = table {
 
 
   lincat 
-    Dig = TDigit ;
-
-  lin
+  Dig = TDigit ;
+lin
     IDig d = d ; 
 
     IIDig d i = {

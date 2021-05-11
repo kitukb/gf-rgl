@@ -12,8 +12,8 @@ incomplete concrete ConjunctionBantu of Conjunction =
     ConjAdV = conjunctDistrSS ;
 
 
-    ConjNP conj ss = conjunctDistrTable NPCase  conj ss ** {
-     a = Ag  (nounAgr ss.a).g  (conjNumber (nounAgr ss.a).n conj.n) (nounAgr ss.a).p ; -- a = conjAgr (agrP3 conj.n) ss.a
+    ConjNP conj ss = conjunctDistrTable Case  conj ss ** {
+     a = toAgr  (nounAgr ss.a).g  (conjNumber (nounAgr ss.a).n conj.n) (nounAgr ss.a).p ; -- a = conjAgr (agrP3 conj.n) ss.a
       isPron = andB ss.isPron ss.isPron} ;
 
     ConjAP conj ss = conjunctDistrTable2  Cgender  Number conj ss;-- ** { isPre = ss.isPre    } ;
@@ -25,7 +25,7 @@ incomplete concrete ConjunctionBantu of Conjunction =
     ConjIAdv = conjunctDistrSS ;   
 
   ConjCN conj cn = {
-      s = \\num,c => conj.s1 ++ cn.n1.s ! num!c ++ conj.s2 ++ cn.n2.s ! num!c ;
+      s = \\num=> conj.s1 ++ cn.n1.s ! num ++ conj.s2 ++ cn.n2.s ! num ;
       g = conjGender cn.n1.g cn.n2.g ;
       s2 = \\num => [];
            } ; 
@@ -40,8 +40,8 @@ incomplete concrete ConjunctionBantu of Conjunction =
     ConsAdv = consrTable Agr comma ;
     BaseAdV = twoSS ;
     ConsAdV = consrSS comma ;
-    BaseNP x y = twoTable NPCase x y ** {a = conjAgr Sg x.a y.a; isPron = andB y.isPron x.isPron ;} ;
-   ConsNP xs x = consrTable NPCase comma xs x ** {a = conjAgr Sg xs.a x.a;
+    BaseNP x y = twoTable Case x y ** {a = conjAgr Sg x.a y.a; isPron = andB y.isPron x.isPron ;} ;
+   ConsNP xs x = consrTable Case comma xs x ** {a = conjAgr Sg xs.a x.a;
    isPron = andB xs.isPron x.isPron ;} ;
 
     
@@ -54,7 +54,7 @@ incomplete concrete ConjunctionBantu of Conjunction =
    BaseCN x y = { n1 = x ; n2 = y } ;
     ConsCN xs x = {
       n1 = {
-       s = \\num,c => x.n1.s ! num!c ++ comma ++ x.n2.s ! num !c ;
+       s = \\num => x.n1.s ! num ++ comma ++ x.n2.s ! num  ;
        g = x.n2.g ;
         s2 = \\num => [] ;      
                 } ;
@@ -69,7 +69,7 @@ incomplete concrete ConjunctionBantu of Conjunction =
     [Adv] = {s1,s2 :Agr => Str} ;
     [AdV] = {s1,s2 : Str} ;
     [IAdv] = {s1,s2 : Str} ;
-    [NP] = {s1,s2 : NPCase => Str ; a : Agr;isPron :Bool} ;
+    [NP] = {s1,s2 : Case => Str ; a : Agr;isPron :Bool} ;
     [AP] = {s1,s2 :  Cgender => Number =>  Str} ; --isPre : Bool} ;
     [RS] = {s1,s2 : Agr => Str }; --c : NPCase} ;
     [CN] = {n1,n2 : CNoun } ;

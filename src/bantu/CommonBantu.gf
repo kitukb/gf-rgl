@@ -11,8 +11,8 @@ resource CommonBantu = ParamX ** open Prelude in {
     coding=utf8 ;
 
   param
-    Case = Nom | Loc ;
-    NPCase = NCase Case | NPoss ;
+    Case = Nom | NPoss ;
+  --  NPCase = NCase Case | NPoss ;
     CardOrd = NCard | NOrd ;
    -- QForm = QDir |QIndir ;
 

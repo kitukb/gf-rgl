@@ -21,11 +21,11 @@ incomplete concrete AdjectiveBantu of Adjective =
       } ;
 
     ComplA2 a np = {
-      s = \\g,n => a.s  !AAdj g n  ++ a.c2 ++ np.s ! NCase Nom; 
+      s = \\g,n => a.s  !AAdj g n  ++ a.c2 ++ np.s !  Nom; 
       isPre = False
       } ;
     ReflA2 a ={
-     s = \\g,n => a.s !AAdj g n ++ a.c2  ++ reflPron ! Ag g n P3 ;
+     s = \\g,n => a.s !AAdj g n ++ a.c2  ++ reflPron ! AgP3 g n  ;
      } ;
 
     SentAP ap sc = {
@@ -40,7 +40,7 @@ incomplete concrete AdjectiveBantu of Adjective =
 
     UseA2 a2 = {s = \\g, n => a2.s !AAdj g n ;isPre = True } ;
 
-   AdvAP ap adv = {s = \\g,n => ap.s ! g ! n ++ adv.s!Ag g n P3
+   AdvAP ap adv = {s = \\g,n => ap.s ! g ! n ++ adv.s!AgP3 g n 
    ; isPre = False} ;
 
 

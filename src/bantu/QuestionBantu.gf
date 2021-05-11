@@ -11,14 +11,14 @@ incomplete concrete QuestionBantu of Question =
           n = n
         } ;
     IdetCN idet cn = {
-            s =    cn.s ! idet.n !Nom  ++idet.s ! cn.g  ;
+            s =    cn.s ! idet.n   ++idet.s ! cn.g  ;
             n = idet.n } ;
     PrepIP p ip = {
       s = p.s!ip.n !G1 ++ ip.s 
       } ;
      -- AdvIAdv i a = {s = i.s ++ a.s} ;
       AdvIP ip adv = {
-      s =  ip.s  ++ adv.s! Ag G1 ip.n P3 ;
+      s =  ip.s  ++ adv.s! AgP3 G1 ip.n  ;
       n= ip.n
       } ;
 
@@ -31,7 +31,7 @@ incomplete concrete QuestionBantu of Question =
         }
       } ;
        QuestIAdv iadv cl = mkQuestion iadv cl ;
-      QuestVP qp vp = {  s = \\t,a,b,_ => qp .s ++  vp.s!Ag G1 qp.n P3!t!a!b};
+      QuestVP qp vp = {  s = \\t,a,b,_ => qp .s ++  vp.s!AgP3 G1 qp.n !t!a!b};
       
        QuestSlash ip slash ={  s = \\t,a,b,_ => ip .s ++  slash.s!t!a!b};  -- check the capability of string 
 {-

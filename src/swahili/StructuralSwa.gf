@@ -75,7 +75,7 @@ no_Phr = ss "hapana" ;
                               <G5>|<G6> => "za" ; 
                               <G2>|<G3> |<G8> |<G9> |<G10> => "ya"; 
                                  _ => ""}}
-                     in { s= questo; isFused= False};
+                     in { s= questo; s1=[]; isFused= False};
   quite_Adv = mkAdA "kabisa" ;
   she_Pron  = mkPron "yeye" "ake" G1 Sg P3;
   so_AdA = mkAdA "so" ;
@@ -187,11 +187,11 @@ no_Phr = ss "hapana" ;
   nobody_NP = regNP "hakuna mtu" a_wa singular False;
   nothing_NP = regNP "hukuna  kitu" ki_vi singular False ;
   at_least_AdN = mkAdN "" ;
-  at_most_AdN = mkAdN "kuvika" ;
+  at_most_AdN = mkAdN "hadi" ;
   except_Prep = mkPrep "kasoro" False ;
   as_CAdv = C.mkCAdv "kama" [] ;
   have_V2 = dirV2 (mkV "kuwa na") ;
   that_Subj = ss "hio" ;
-  lin language_title_Utt = ss "Swawahili" ;
+  lin language_title_Utt = ss "Swahili" ;
 }
 

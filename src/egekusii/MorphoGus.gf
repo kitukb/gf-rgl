@@ -265,13 +265,17 @@ Few_prefix : Cgender ->  Str = \g ->
 
           iregN :Str-> Str ->Cgender -> Noun= \man,men,g ->mkNoun man men g;
 
-  mkNoun :Str-> Str ->Cgender -> Noun= \man,men,g -> { 
+ {-} mkNoun :Str-> Str ->Cgender -> Noun= \man,men,g -> { 
     s = table{Sg => table{Nom => man ; Loc=>case g of { G3 => man ++ "ime" ; _=>""}}; 
               Pl => table{Nom => men ; Loc=> case g of { G3 => men ++ "ime" ; _=>""}}} ;
     g = g
+    } ; -}
+
+ mkNoun :Str-> Str ->Cgender -> Noun= \man,men,g -> { 
+    s = table{Sg => man ; Pl =>  men} ;
+    g = g
     } ;
-
-
+regAAd : Str-> Str -> {s : AForm =>  Str} = \seo,seoo -> regAdj seo seoo;
 regA :Str->{s : AForm =>  Str}= \adj ->regAdj adj [];
   regAdj:Str -> Str-> {s : AForm =>  Str} = \seo,see ->  {s = table {
 -- regA:Str -> {s : AForm =>  Str} = \seo ->  {s = table {

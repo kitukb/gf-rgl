@@ -69,10 +69,10 @@ incomplete concrete CatBantu of Cat =
    V3= Verb ** {c2, c3 : Prep} ;
    A = {s : AForm =>  Str } ; 
    A2 = {s :AForm =>  Str }** {c2 : Str} ;
-   N = {s : Number => Case => Str ; g :  Cgender} ;
-   N2 = {s : Number => Case => Str ; g :  Cgender} ** {c2 : Prep} ; 
-   N3 = {s : Number => Case => Str ; g :  Cgender} ** {c2,c3 : Prep} ; 
-   PN = {s : Case => Str ; g :  Cgender} ;
+   N = {s : Number => Str ; g :  Cgender} ;
+   N2 = {s : Number =>  Str ; g :  Cgender} ** {c2 : Prep} ; 
+   N3 = {s : Number =>  Str ; g :  Cgender} ** {c2,c3 : Prep} ; 
+   PN = {s : Str ; g :  Cgender} ;
    --Tense = {s : Str ; t : ResKam.Tense} ;
 
   linref
@@ -90,11 +90,11 @@ incomplete concrete CatBantu of Cat =
   --  VV = \v -> infVP VVAux (predVV v) Simul CPos (agrP3 Sg) ;
    -- V2V = \v -> infVP VVAux (predVc v) Simul CPos (agrP3 Sg) ;
    -- Det =\d -> d.s!Obj G1;
-    CN = \cn -> cn.s!Sg!Nom ++  cn.s2!Sg ;
+    CN = \cn -> cn.s!Sg ++  cn.s2!Sg ;
    -- A = \a -> a.s ! AAdj firstGender Sg ;
     --A2 = \a -> a.s ! AAdj firstGender Sg ++ a.c2 ;
 
-    N = \n -> n.s ! Sg ! Nom ;
-    N2 = \n -> n.s ! Sg ! Nom ++ n.c2.s!Sg!firstGender ; 
-    N3 = \n -> n.s ! Sg ! Nom ++ n.c2.s!Sg!firstGender  ++ n.c3.s!Sg!firstGender  ; 
+    N = \n -> n.s ! Sg ;
+    N2 = \n -> n.s ! Sg++ n.c2.s!Sg!firstGender ; 
+    N3 = \n -> n.s ! Sg ++ n.c2.s!Sg!firstGender  ++ n.c3.s!Sg!firstGender  ; 
 }

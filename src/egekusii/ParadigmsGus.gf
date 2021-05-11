@@ -33,8 +33,7 @@ oper
   aa        = G10 ;
   
   nominative = npNom ;
-  locative = npLoc ;
-
+  possive = npPoss ;
   --npNumber np = (nounAgr  np.a).n ;
 
 
@@ -90,6 +89,12 @@ mkA2 = overload {
     mkA2 : Str -> Str -> A2  = \a,p -> prepA2 (regA a) (mkPrep p False);
   } ;
   
+
+mkPrep = overload {
+    mkPrep : Str ->Bool-> Prep = \str,bool -> 
+    lin Prep {s = \\n,g => str ; s1= "ime";isFused = bool } ;
+    mkPrep : (Number => Cgender =>  Str) ->Bool-> Prep = \t,bool ->
+    lin Prep {s = t ; s1= "ime"; isFused = bool} ;};
 -}
   mkV = overload {
     mkV : (cry : Str) -> V=\v-> lin V (regV v ) ; -- regular, incl. cry-cries, kiss-kisses etc
@@ -107,6 +112,6 @@ mkA2 = overload {
   regPN    : Str ->Cgender -> PN ;          
    nounPN : N -> PN ;
 
-
+infusedstring: Str="ime";
 
 } 

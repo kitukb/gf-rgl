@@ -18,7 +18,7 @@ oper
   pa_pa  : Cgender ; --uu
   mu_mu  : Cgender ; --uu
 
-  
+  locprep: Str="ni";
   Cgender =  MorphoSwa.Cgender ; 
   Number =  MorphoSwa.Number ;
   Case   =  MorphoSwa.NPCase ;
@@ -37,7 +37,7 @@ oper
   mu_mu  =G13;
   
   nominative = npNom ;
-  locative = npLoc ;
+  possive = npPoss ;
 
   --npNumber np = (nounAgr np.a).n ;
 
@@ -77,8 +77,13 @@ oper
     iregN wp wpl g ;
  
 
- 
-
+ {-}
+mkPrep = overload {
+    mkPrep : Str ->Bool-> Prep = \str,bool -> 
+    lin Prep {s = \\n,g => str ; s1= "ni";isFused = bool } ;
+    mkPrep : (Number => Cgender =>  Str) ->Bool-> Prep = \t,bool ->
+    lin Prep {s = t ; s1= "ni"; isFused = bool} ;}; -}
+    
  mkAV  v  = v ** { lock_AV = <>} ;
       mkAV  : A ->  AV ;
       AS, AV : Type = A ;
@@ -110,5 +115,6 @@ mkV2 = overload {
         mkV2  : V -> Prep -> V2 = prepV2  ;
   };
 
-
+  
+infusedstring: Str="ni";
 } 

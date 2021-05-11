@@ -9,9 +9,9 @@ flags
 --2 Constants uniformly defined in terms of language-dependent constants
 
 oper
-  npNom : NPCase = NCase Nom ;
-  npLoc : NPCase = NCase Loc ;
-  npcase2case : NPCase -> Case = \nc -> case nc of {NCase c => c ; _ => Nom} ;
+  npNom : Case = Nom ;
+  npPoss : Case = NPoss ;
+  --npcase2case : NPCase -> Case = \nc -> case nc of {NCase c => c ; _ => Nom} ;
  
 
  mkIP : Str -> Number -> {s : Str ; n : Number} = \who,n ->
@@ -21,16 +21,16 @@ oper
       } ;
 
   mkNP : (i,my : Str) ->  Cgender -> Number ->Bool-> Person ->  
-    {s : NPCase => Str ; a : Agr;isPron:Bool} = \i,my,g,n,b,p -> 
+    {s : Case => Str ; a : Agr;isPron:Bool} = \i,my,g,n,b,p -> 
     { s = table {
-        NCase Nom => i ;
-        _ => my 
+        Nom => i ;
+        NPoss => my 
         } ;
-      a = Ag g n p ;
+      a = toAgr g n p ;
       isPron=b;
     };
 
-  regNP : Str -> Cgender -> Number ->Bool-> {s : NPCase => Str ; a : Agr; isPron:Bool} = \that,g, n,b-> 
+  regNP : Str -> Cgender -> Number ->Bool-> {s : Case => Str ; a : Agr; isPron:Bool} = \that,g, n,b-> 
     mkNP that that g n b P3  ;
 
   mkPron: (i, mine : Str) ->  Cgender -> Number -> Person ->
@@ -41,7 +41,7 @@ oper
               <Sg ,_> => ProunSgprefix g + mine ; 
               <Pl,_> => ProunPlprefix g + mine}       
             } ;
-          a = Ag g n p } ; 
+          a = toAgr g n p } ; 
   QClause ={s : Polarity => Tense => Anteriority => QForm => Str} ;
   Compvv,Clause : Type;
   
@@ -51,8 +51,8 @@ oper
           progV:Str;
           imp : Polarity => ImpForm => Str;
          s1 : Polarity => Tense => Anteriority =>  Agr=> Str };
-  NounPhrase  = {s : NPCase => Str ; a : Agr; isPron : Bool} ;
-  Preposition={s: Number =>  Cgender => Str; isFused: Bool} ;
+  NounPhrase  = {s : Case => Str ; a : Agr; isPron : Bool} ;
+  Preposition={s: Number =>  Cgender => Str; s1:Str;  isFused: Bool} ;
   Comp = {s : Agr => Str} ;
   Compl : Type = {s : Str } ;
   VerbPhrase : Type = {  

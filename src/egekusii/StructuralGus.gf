@@ -23,7 +23,7 @@ concrete StructuralGus of Structural = CatGus **
   by8means_Prep = mkPrep "kwa" False;---not yet
   during_Prep = mkPrep "gose" False ;
   either7or_DConj = mkConj "gose"  singular ;
- everybody_NP = regNP "kera emunto " G1 singular False ;
+everybody_NP = regNP "kera emunto " G1 singular False ;
  every_Det = { s =\\g => "kera"; n = Sg; isPre =False} ;
    everything_NP = regNP "kera egento" G5 singular False ; --Cgender confirm
   everywhere_Adv = mkAdv "kera ase" ;
@@ -105,7 +105,7 @@ concrete StructuralGus of Structural = CatGus **
                     <G7> => "bia"
                        }                
            }
-    in { s= questo; isFused=False} ;
+    in { s= questo; s1=[]; isFused=False} ;
   quite_Adv = mkAdA "o muno" ;
   she_Pron  = mkPron "ere" "je" G1 Sg P3 ;
            

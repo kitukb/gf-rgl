@@ -6,7 +6,7 @@ incomplete concrete PhraseBantu of Phrase =
   lin
     PhrUtt pconj utt voc = {s = pconj.s ++ utt.s ++ voc.s} ;
     UttS s = {s = s.s } ;
-    UttNP np = {s = np.s ! NCase Nom} ;
+    UttNP np = {s = np.s !Nom} ;
     NoPConj = {s = []} ;
     NoVoc = {s = []} ;
     UttIAdv iadv = iadv ;
@@ -15,11 +15,11 @@ incomplete concrete PhraseBantu of Phrase =
     UttImpPl pol imp = {s = pol.s ++ imp.s ! pol.p ! ImpF Pl False} ;
     UttImpPol pol imp ={s = pol.s ++ imp.s ! pol.p ! ImpF Sg True };
     UttAP ap = {s = ap.s !G1 !Sg} ;
-    UttAdv adv = {s= adv.s!Ag G1 Sg P3 };
+    UttAdv adv = {s= adv.s!AgP3 G1 Sg  };
     UttInterj i = i ;
     PConjConj conj = {s = conj.s2} ;
-    UttCN n = {s = n.s ! Sg !Nom}; 
-    VocNP np = {s = "," ++ np.s !NCase Nom} ;
+    UttCN n = {s = n.s ! Sg }; 
+    VocNP np = {s = "," ++ np.s ! Nom} ;
     UttCard n = {s = n.s ! G1} ;
     UttVP vp = {s = vp.inf};
     UttQS qs = {s = qs.s ! QDir} ;

@@ -3,13 +3,16 @@
 --1 Swawahili morphology Resource Morphology
 --
 -- Benson Kituku 2017-2018
+instance MorphoSwa of MorphoBantu -[regA] = DiffSwa, CommonBantu,ResSwa ** open  (Predef=Predef),Prelude, CatSwa in {
 
+  flags optimize=all ;
 
+{-}
 resource MorphoSwa = CommonBantu ,ResSwa 
 ** open Prelude, Predef 
 in {
 
-  flags optimize=all ;
+  flags optimize=all ; -}
   oper 
   let_s: Str="wacha t";
   lets: Str="wacha ";
@@ -160,14 +163,13 @@ Detsomeplprefix : Cgender ->  Str = \g ->
                _ => PrefixPlNom g + w };
                 in mkNoun w wpl g ;
  
-
+{-}
     iregN :Str-> Str ->Cgender -> Noun= \man,men,g ->mkNoun man men g;
   mkNoun :Str-> Str ->Cgender -> Noun= \man,men,g ->  { -- for irregular noun
-    s = table{Sg => table{Nom => man ; 
-                          Loc=> man + "ni"   }; 
-              Pl => table{Nom => men ; Loc=> men + "ni" }} ;
+    s = table{Sg => man ;  Pl =>  men  } ;
     g =  g;
-    } ;
+    } ; 
+  regAAd : Str-> Str -> {s : AForm =>  Str} = \seo,seoo -> regAdj seo seoo; -}
 regA :Str->{s : AForm =>  Str}= \adj ->regAdj adj ("vi"+adj);
  regAdj:Str -> Str-> {s : AForm =>  Str} = \seo,see ->  {s = table {
      AAdj G1 Sg=>case Predef.take 1 seo of { 
@@ -306,14 +308,14 @@ mkVerb :(gen,preneg,inf,habit : Str) -> Verb= \gen,preneg,inf,habit ->
                     <Neg,ImpF Pl _> => "msi" + init gen +"e"    }
         
       }; 
-
+ {-} 
 regVP run  = { 
       s =\\ ag,pol,tes,ant =>run.s1!pol!tes!ant!ag; 
       compl=\\_=> [];
       progV = run.progV;
       imp=\\po,imf => run.imp!po!imf; 
       inf= run.s!VInf };
- {-}    
+   
  regV :Str -> Verb =\vika -> {
      s =table{ 
              VPreNeg   => init vika +"i";
@@ -405,5 +407,6 @@ subjclitic : VerbSubjclitic = { s=\\a => case a of {
            -- Ag  _  _   =><"",""> 
            }};
            mkClitic  : Str -> Str = \c -> c ++ Predef.BIND ;
+           
 }
 

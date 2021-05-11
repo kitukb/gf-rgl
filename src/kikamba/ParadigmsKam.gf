@@ -4,7 +4,7 @@ instance ParadigmsKam of ParadigmsBantu = DiffKam, CommonBantu ** open  (Predef=
    
 
 oper
-  --Cgender : Type ; 
+   
   mu_a   : Cgender ; --class gender 
   mu_mi  : Cgender ;
   i_ma   : Cgender ;
@@ -31,9 +31,8 @@ oper
   u_n    =G9 ; -- class gender 11/10
   ku_ma  = G10 ; -- class gender 15/6
  
-   nominative = npNom ;
-  locative = npLoc ;
- 
+  nominative = npNom ;
+  possive = npPoss ;
 
   regN = MorphoKam.regN ; 
   iregN = MorphoKam.iregN ;
@@ -68,7 +67,12 @@ oper
         mkV2  : V -> V2 = dirV2 ;
         mkV2  : V -> Prep -> V2 = prepV2  ;
   };
-
+{-}
+mkPrep = overload {
+    mkPrep : Str ->Bool-> Prep = \str,bool -> 
+    lin Prep {s = \\n,g => str ; s1= "ni";isFused = bool } ;
+    mkPrep : (Number => Cgender =>  Str) ->Bool-> Prep = \t,bool ->
+    lin Prep {s = t ; s1= "ni"; isFused = bool} ;}; -}
 
     verb2snoun : Verb ->  Cgender -> Noun = \v,g->    
     let wp = "mu" + init(v.s ! VGen) +"i" ;
@@ -87,5 +91,5 @@ oper
   regV=MorphoKam.regV ; 
 
 
-
+infusedstring: Str="ni";
 } 

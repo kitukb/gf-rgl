@@ -8,7 +8,7 @@ incomplete concrete RelativeBantu of Relative =
     RelCl cl = { s = \\ p,t,a => such ++ that ++ cl.s! p ! t ! a };
     
    RelVP rp vp = let  agr = nounAgr rp.a in
-   {s=\\p,t,a => rp.s!agr.g!agr.n ++ vp.s!Ag agr.g agr.n agr.p !p!t!a ++ vp.compl!Ag agr.g agr.n agr.p};
+   {s=\\p,t,a => rp.s!agr.g!agr.n ++ vp.s!toAgr agr.g agr.n agr.p !p!t!a ++ vp.compl!toAgr agr.g agr.n agr.p};
 
 
     RelSlash rp slash = let  agr = nounAgr rp.a in
@@ -18,10 +18,10 @@ incomplete concrete RelativeBantu of Relative =
 
   -- FunRP : Prep -> NP -> RP -> RP ; the mother of whom
     FunRP p np rp =let  agr = nounAgr np.a in
-     {s = \\g,n => np.s !NCase Nom ++ p.s!n!g ++ rp.s ! g ! n;
+     {s = \\g,n => np.s ! Nom ++ p.s!n!g ++ rp.s ! g ! n;
       a= np.a } ;
     -- IdRP  : RP ;  -- which 
-    IdRP = { s =\\g,n => which_IQuant.s!n!g; a=Ag G1 Sg P3};
+    IdRP = { s =\\g,n => which_IQuant.s!n!g; a=AgP3 G1 Sg };
 
 }
  

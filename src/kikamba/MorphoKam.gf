@@ -140,11 +140,10 @@ Detsomeplprefix : Cgender ->  Str = \g ->
           in mkNoun w wpl g ;
  iregN :Str-> Str ->Cgender -> Noun= \man,men,g ->mkNoun man men g;
   mkNoun :Str-> Str ->Cgender -> Noun= \man,men,g ->  { -- for irregular noun
-    s = table{Sg => table{Nom => man ; 
-                          Loc=> man + "ni"   }; 
-              Pl => table{Nom => men ; Loc=> men + "ni" }} ;
+    s = table{Sg =>  man ; Pl => men } ;
     g =  g;
     } ;
+  regAAd : Str-> Str -> {s : AForm =>  Str} = \seo,seoo -> regAdj seo seoo;
  regA :Str->{s : AForm =>  Str}= \adj ->regAdj adj [];
   regAdj:Str -> Str-> {s : AForm =>  Str} = \seo,see ->  {s = table {
      AAdj G1  Sg=>case Predef.take 1 seo of { 

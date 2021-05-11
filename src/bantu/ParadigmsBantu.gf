@@ -17,10 +17,10 @@ oper
 
 
 
-  NPCase : Type ; 
+  Case : Type ; 
 
-  nominative : NPCase ; 
-  locative   : NPCase ; 
+  nominative : Case ; 
+  possive   : Case ; 
   npNumber : NP -> Number ; -- exctract the number of a noun phrase
   
 
@@ -198,7 +198,12 @@ mkN2 = overload {
   fGender = G1 ;
   
                        
- 
+ mkPrep = overload {
+    mkPrep : Str ->Bool-> Prep = \str,bool -> 
+    lin Prep {s = \\n,g => str ; s1= infusedstring;isFused = bool } ;
+    mkPrep : (Number => Cgender =>  Str) ->Bool-> Prep = \t,bool ->
+    lin Prep {s = t ; s1= infusedstring; isFused = bool} ;};
+
 
 --3 Relational common noun phrases
 
@@ -211,7 +216,7 @@ mkN2 = overload {
   cnN3 = \n,p,q -> lin N3 (n ** {c2 = p ; c3 = q}) ;
 
   
-    regPN n g = lin PN {s =\\c=> n  ; g = g} ;
+    regPN n g = lin PN {s = n  ; g = g} ;
     
    
   nounPN n = lin PN {s = n.s ! singular ; g = n.g} ;
@@ -226,11 +231,7 @@ mkN2 = overload {
   mkAdA x = lin AdA (ss x) ;
   mkAdN x = lin AdN (ss x) ;
 
-  mkPrep = overload {
-    mkPrep : Str ->Bool-> Prep = \str,bool -> 
-    lin Prep {s = \\n,g => str ;isFused = bool } ;
-    mkPrep : (Number => Cgender =>  Str) ->Bool-> Prep = \t,bool ->
-    lin Prep {s = t ;isFused = bool} ;};
+  
 
    noPrep = mkPrep [] False ;
   
@@ -242,7 +243,7 @@ mkN2 = overload {
     mkN : (man,men : Str) ->Cgender -> N = \s,p,g -> lin N ( iregN s p g) ;
             } ;
  compoundN : N -> N ->Cgender-> N = \mundu,muume,g -> {
-   s = \\n,c => mundu.s! n! c ++ muume.s!n! Nom ;   
+   s = \\n=> mundu.s! n ++ muume.s!n;   
   g = g ;
    lock_N = <>
    } ;
